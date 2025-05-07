@@ -1,0 +1,48 @@
+body {
+  background-color: #121212;
+  color: #ffffff;
+  font-family: 'Helvetica Neue', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.player {
+  width: 300px;
+  text-align: center;
+}
+
+#cover {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.controls {
+  margin: 20px 0;
+}
+
+button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 30px;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  color: #e91e63;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#progress {
+  flex-grow: 1;
+  margin: 0 10px;
+}
