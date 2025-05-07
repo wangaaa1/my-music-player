@@ -10,34 +10,11 @@
 <script>
 // 禁止开发者工具
 document.addEventListener('keydown', function (e) {
-    // F12
-    if (e.keyCode === 123) {
-        e.preventDefault();
-        return false;
-    }
-    // Ctrl+Shift+I
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-        e.preventDefault();
-        return false;
-    }
-    // Ctrl+Shift+C
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 67) {
-        e.preventDefault();
-        return false;
-    }
-    // Ctrl+Shift+J
-    if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
-        e.preventDefault();
-        return false;
-    }
-    // Ctrl+U
-    if (e.ctrlKey && e.keyCode === 85) {
+    if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 67 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
         e.preventDefault();
         return false;
     }
 });
-
-// 禁止右键菜单
 document.addEventListener('contextmenu', function (e) {
     e.preventDefault();
 });
@@ -45,7 +22,11 @@ document.addEventListener('contextmenu', function (e) {
 
 <body>
   <div class="player">
-    <img id="cover" src="images/cover1.jpg" alt="歌曲封面">
+
+    <div class="cover-container">
+      <img id="cover" src="images/cover1.jpg" alt="歌曲封面">
+    </div>
+
     <h2 id="title">歌曲1</h2>
 
     <ul id="playlist"></ul>
@@ -63,8 +44,10 @@ document.addEventListener('contextmenu', function (e) {
       <input type="range" id="progress" value="0" min="0" max="100">
       <span id="duration">00:00</span>
     </div>
+
   </div>
-  
+
   <script src="script.js"></script>
 </body>
 </html>
+
