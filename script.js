@@ -7,14 +7,9 @@ const nextBtn = document.getElementById('next');
 const progress = document.getElementById('progress');
 const currentTimeEl = document.getElementById('current-time');
 const durationEl = document.getElementById('duration');
-const playlistEl = document.getElementById('playlist'); // 新增：歌单
+const playlistEl = document.getElementById('playlist');
 
-const songs = [
-  { name: "song1", title: "歌曲1", cover: "cover1.jpg" },
-  { name: "song2", title: "歌曲2", cover: "cover2.jpg" },
-  { name: "song3", title: "歌曲3", cover: "cover3.jpg" }
-];
-
+let songs = [];
 let songIndex = 0;
 
 // 加载歌曲
@@ -106,10 +101,22 @@ function createPlaylist() {
 function highlightPlaylist() {
   const items = playlistEl.querySelectorAll('li');
   items.forEach((item, index) => {
-    item.style.color = index === songIndex ? '#e91e63' : '#ffffff';
+    item.className = index === songIndex ? 'active' : '';
   });
 }
 
-// 初始加载
-createPlaylist();
-loadSong(songs[songIndex]);
+// 初始加载：从 songs.json 动态读取
+fetch('songs.json')
+  .then(response => response.json())
+  .then(data => {
+    songs = data.map(song => ({
+      name: song.name,
+      title: song.name,  // 直接用文件名作为标题
+      cover: song.cover
+    }));
+    createPlaylist();
+    loadSong(songs[songIndex]);
+  })
+  .catch(error => {
+    console.error('加载歌曲列表失败:', error);
+  });
