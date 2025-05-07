@@ -9,7 +9,7 @@ const currentTimeEl = document.getElementById('current-time');
 const durationEl = document.getElementById('duration');
 const playlistEl = document.getElementById('playlist');
 
-const BASE_URL = "https://pub-87c4bbfe187546b79e4389795d9b5341.r2.dev/my-music";  // 这里改成你的Public URL + my-music
+const BASE_URL = "https://pub-87c4bbfe187546b79e4389795d9b5341.r2.dev";  // 这里改成你的Public URL + my-music
 
 let songs = [];
 let songIndex = 0;
