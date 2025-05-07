@@ -1,110 +1,24 @@
 body {
-  background-color: #121212;
-  color: #ffffff;
-  font-family: 'Helvetica Neue', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
   margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .player {
-  width: 300px;
-  text-align: center;
+  background: #ffffff;
   padding: 20px;
-}
-
-#cover {
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
   width: 100%;
-  max-height: 300px;
-  object-fit: cover;
-  border-radius: 10px;
+  max-width: 400px;
 }
 
-#title {
-  margin: 15px 0;
-  font-size: 20px;
-}
-
-/* 新增：播放列表 */
-#playlist {
-  list-style: none;
-  padding: 0;
-  margin: 20px 0;
-  max-height: 150px;
-  overflow-y: auto;
-  border: 1px solid #333;
-  border-radius: 8px;
-}
-
-#playlist li {
-  padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #333;
-  font-size: 16px;
-}
-
-#playlist li:hover {
-  background-color: #333;
-}
-
-#playlist li.active {
-  background-color: #e91e63;
-  color: white;
-}
-
-.controls {
-  margin: 20px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-}
-
-button {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 30px;
-  margin: 0;
-  cursor: pointer;
-}
-
-button:hover {
-  color: #e91e63;
-}
-
-.progress-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-#progress {
-  flex-grow: 1;
-  margin: 0 10px;
-}
-
-/* 手机端适配 */
-@media (max-width: 600px) {
-  .player {
-    width: 90%;
-  }
-  #cover {
-    max-height: 200px;
-  }
-  button {
-    font-size: 24px;
-  }
-  #title {
-    font-size: 18px;
-  }
-  .progress-container {
-    flex-direction: column;
-    gap: 10px;
-  }
 .cover-container {
   width: 90vw;
   max-width: 400px;
@@ -118,6 +32,54 @@ button:hover {
   object-fit: cover;
 }
 
+h2#title {
+  margin: 10px 0;
+  font-size: 22px;
+  color: #333;
+}
+
+#playlist {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+#playlist li {
+  padding: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#playlist li:hover {
+  background-color: #e0e0e0;
+}
+
+#playlist li.active {
+  background-color: #cce5ff;
+}
+
+.controls {
+  margin: 15px 0;
+}
+
+.controls button {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 10px 16px;
+  margin: 0 8px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.controls button:hover {
+  background-color: #0056b3;
+}
+
 .progress-container {
   width: 90vw;
   max-width: 400px;
@@ -127,9 +89,30 @@ button:hover {
   justify-content: space-between;
 }
 
+#current-time,
+#duration {
+  font-size: 12px;
+  color: #666;
+  min-width: 35px;
+}
+
 #progress {
   flex-grow: 1;
   margin: 0 10px;
+  height: 5px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  appearance: none;
+}
+
+#progress::-webkit-slider-thumb {
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #007bff;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -5px;
 }
 
 /* 手机端适配 */
