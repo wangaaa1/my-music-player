@@ -105,4 +105,45 @@ button:hover {
     flex-direction: column;
     gap: 10px;
   }
+.cover-container {
+  width: 90vw;
+  max-width: 400px;
+  margin: 0 auto 20px auto;
+}
+
+#cover {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.progress-container {
+  width: 90vw;
+  max-width: 400px;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#progress {
+  flex-grow: 1;
+  margin: 0 10px;
+}
+
+/* 手机端适配 */
+@media (max-width: 600px) {
+  .player {
+    width: 95%;
+  }
+  #title {
+    font-size: 18px;
+  }
+  .progress-container {
+    width: 90vw;
+    max-width: 400px;
+    flex-direction: row;
+    gap: 10px;
+  }
 }
