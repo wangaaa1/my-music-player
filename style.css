@@ -16,11 +16,17 @@ body {
 
 #cover {
   width: 100%;
+  max-height: 300px;
+  object-fit: cover;
   border-radius: 10px;
 }
 
 .controls {
   margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 }
 
 button {
@@ -28,7 +34,7 @@ button {
   border: none;
   color: #fff;
   font-size: 30px;
-  margin: 0 10px;
+  margin: 0;
   cursor: pointer;
 }
 
@@ -40,9 +46,30 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 20px;
 }
 
 #progress {
   flex-grow: 1;
   margin: 0 10px;
+}
+
+/* 新增：适配手机屏幕 */
+@media (max-width: 600px) {
+  .player {
+    width: 90%;
+  }
+  #cover {
+    max-height: 200px;
+  }
+  button {
+    font-size: 24px;
+  }
+  #title {
+    font-size: 18px;
+  }
+  .progress-container {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
