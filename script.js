@@ -9,14 +9,16 @@ const currentTimeEl = document.getElementById('current-time');
 const durationEl = document.getElementById('duration');
 const playlistEl = document.getElementById('playlist');
 
+const BASE_URL = "https://pub-87c4bbfe187546b79e4389795d9b5341.r2.dev/my-music";  // 这里改成你的Public URL + my-music
+
 let songs = [];
 let songIndex = 0;
 
 // 加载歌曲
 function loadSong(song) {
   title.innerText = song.title;
-  audio.src = `songs/${song.name}.mp3`;
-  cover.src = `images/${song.cover}`;
+  audio.src = `${BASE_URL}/songs/${song.name}.mp3`;
+  cover.src = `${BASE_URL}/images/${song.cover}`;
   highlightPlaylist();
 }
 
@@ -111,7 +113,7 @@ fetch('songs.json')
   .then(data => {
     songs = data.map(song => ({
       name: song.name,
-      title: song.name,  // 直接用文件名作为标题
+      title: song.name,  // 文件名作为歌曲标题
       cover: song.cover
     }));
     createPlaylist();
