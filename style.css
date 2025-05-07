@@ -12,6 +12,7 @@ body {
 .player {
   width: 300px;
   text-align: center;
+  padding: 20px;
 }
 
 #cover {
@@ -19,6 +20,38 @@ body {
   max-height: 300px;
   object-fit: cover;
   border-radius: 10px;
+}
+
+#title {
+  margin: 15px 0;
+  font-size: 20px;
+}
+
+/* 新增：播放列表 */
+#playlist {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+#playlist li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #333;
+  font-size: 16px;
+}
+
+#playlist li:hover {
+  background-color: #333;
+}
+
+#playlist li.active {
+  background-color: #e91e63;
+  color: white;
 }
 
 .controls {
@@ -54,7 +87,7 @@ button:hover {
   margin: 0 10px;
 }
 
-/* 新增：适配手机屏幕 */
+/* 手机端适配 */
 @media (max-width: 600px) {
   .player {
     width: 90%;
@@ -72,21 +105,4 @@ button:hover {
     flex-direction: column;
     gap: 10px;
   }
-}
-#playlist {
-  list-style: none;
-  padding: 0;
-  margin: 20px 0;
-  max-height: 150px;
-  overflow-y: auto;
-}
-
-#playlist li {
-  padding: 5px 0;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-#playlist li:hover {
-  color: #e91e63;
 }
