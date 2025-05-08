@@ -108,7 +108,7 @@ function highlightPlaylist() {
 }
 
 // 初始加载：从 songs.json 动态读取
-fetch('songs.json')
+fetch('songs.json?v=' + Date.now())
   .then(response => response.json())
   .then(data => {
     songs = data.map(song => ({
