@@ -9,20 +9,27 @@ const currentTimeEl = document.getElementById('current-time');
 const durationEl = document.getElementById('duration');
 const playlistEl = document.getElementById('playlist');
 
-const BASE_URL = "https://listenwang.space";  // 你的域名，不要末尾斜杠
+const BASE_URL = "https://listenwang.space";  // 修改成你的域名
 
 let songs = [];
 let songIndex = 0;
 
-// 加载歌曲列表（加时间戳避免缓存）
+// 加载歌曲列表（自动加时间戳避免缓存）
 async function loadSongsList() {
     try {
         const response = await fetch(`${BASE_URL}/songs.json?v=${Date.now()}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
         songs = await response.json();
+        if (songs.length === 0) {
+            throw new Error('歌曲列表为空');
+        }
         createPlaylist();
         loadSong(songs[songIndex]);
     } catch (error) {
         console.error('加载歌曲列表失败:', error);
+        title.innerText = "歌曲列表加载失败，请稍后再试";
     }
 }
 
@@ -60,7 +67,7 @@ function nextSong() {
     playSong();
 }
 
-// 点击按钮控制
+// 点击按钮控制播放
 playBtn.addEventListener('click', () => {
     if (audio.paused) {
         playSong();
@@ -71,7 +78,7 @@ playBtn.addEventListener('click', () => {
 prevBtn.addEventListener('click', prevSong);
 nextBtn.addEventListener('click', nextSong);
 
-// 更新进度条
+// 音频播放进度条
 audio.addEventListener('timeupdate', () => {
     if (audio.duration) {
         const progressPercent = (audio.currentTime / audio.duration) * 100;
@@ -80,14 +87,14 @@ audio.addEventListener('timeupdate', () => {
     }
 });
 
-// 拖动进度条
+// 拖动进度条改变播放位置
 progress.addEventListener('input', () => {
     if (audio.duration) {
         audio.currentTime = (progress.value / 100) * audio.duration;
     }
 });
 
-// 播放结束后自动播放下一首
+// 播放完自动下一首
 audio.addEventListener('ended', nextSong);
 
 // 更新时间显示
@@ -96,6 +103,7 @@ function updateTimes() {
     durationEl.innerText = formatTime(audio.duration);
 }
 
+// 格式化时间
 function formatTime(time) {
     const minutes = Math.floor(time / 60) || 0;
     const seconds = Math.floor(time % 60) || 0;
@@ -118,7 +126,7 @@ function createPlaylist() {
     });
 }
 
-// 高亮当前播放的歌曲
+// 高亮当前播放中的歌曲
 function highlightPlaylist() {
     const items = playlistEl.querySelectorAll('li');
     items.forEach((item, index) => {
@@ -126,5 +134,5 @@ function highlightPlaylist() {
     });
 }
 
-// 初始化
+// 页面初始化加载
 loadSongsList();
