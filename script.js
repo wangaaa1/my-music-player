@@ -128,3 +128,20 @@ const speedSelect = document.getElementById('speed');
 speedSelect.addEventListener('change', () => {
   audio.playbackRate = parseFloat(speedSelect.value);
 });
+
+
+// 添加定时关闭功能
+let pauseTimer = null;
+
+const timerSelect = document.getElementById('timer');
+timerSelect.addEventListener('change', () => {
+  clearTimeout(pauseTimer);
+  const hours = parseFloat(timerSelect.value);
+  if (hours > 0) {
+    const ms = hours * 60 * 60 * 1000;
+    pauseTimer = setTimeout(() => {
+      audio.pause();
+      alert('播放已自动暂停 ⏸️');
+    }, ms);
+  }
+});
