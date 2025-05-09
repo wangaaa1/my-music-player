@@ -149,3 +149,22 @@ h2#title {
   font-size: 14px;
   border: 1px solid #ccc;
 }
+
+/* ✅ 定时关闭样式 */
+.timer-control {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.timer-control label {
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+.timer-control select {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+}
