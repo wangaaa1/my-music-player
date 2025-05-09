@@ -130,3 +130,22 @@ h2#title {
     gap: 10px;
   }
 }
+
+/* ✅ 倍速播放样式 */
+.speed-control {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.speed-control label {
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+.speed-control select {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+}
