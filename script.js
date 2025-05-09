@@ -122,3 +122,9 @@ fetch('songs.json?v=' + Date.now())
   .catch(error => {
     console.error('加载歌曲列表失败:', error);
   });
+
+// 添加倍速播放功能
+const speedSelect = document.getElementById('speed');
+speedSelect.addEventListener('change', () => {
+  audio.playbackRate = parseFloat(speedSelect.value);
+});
