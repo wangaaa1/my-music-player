@@ -188,3 +188,24 @@ timerSelect.addEventListener('change', () => {
     }, ms);
   }
 });
+
+// ✅ 手机兼容性增强：播放时每秒保存一次时间
+let saveInterval = null;
+
+function startSaveTimer() {
+  clearInterval(saveInterval);
+  saveInterval = setInterval(() => {
+    if (!audio.paused && audio.currentTime > 0) {
+      localStorage.setItem(STORAGE_KEY_PREFIX + songs[songIndex].name, audio.currentTime);
+      localStorage.setItem('last_song_index', songIndex);
+      console.log(`[定时器] 保存位置: ${audio.currentTime.toFixed(2)}s`);
+    }
+  }, 1000);
+}
+
+// 播放时启动保存定时器，暂停/播放完/切歌时关闭
+audio.addEventListener('play', startSaveTimer);
+audio.addEventListener('pause', () => clearInterval(saveInterval));
+audio.addEventListener('ended', () => clearInterval(saveInterval));
+window.addEventListener('beforeunload', () => clearInterval(saveInterval));
+
