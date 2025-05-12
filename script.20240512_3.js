@@ -22,7 +22,7 @@ function loadSong(song) {
   cover.src = `${BASE_URL}/images/${song.cover}`;
   highlightPlaylist();
 
-  // 先清除监听，防止重复
+  // 先清除监听，防止重复1
   audio.onloadedmetadata = null;
 
   const savedTime = localStorage.getItem(STORAGE_KEY_PREFIX + song.name);
