@@ -81,9 +81,19 @@ audio.addEventListener('timeupdate', () => {
     localStorage.setItem('last_song_index', songIndex);
   }
 });
-progress.addEventListener('input', () => {
-  audio.currentTime = (progress.value / 100) * audio.duration;
-});
+function seekAudio() {
+  if (audio.duration) {
+    audio.currentTime = (progress.value / 100) * audio.duration;
+  }
+}
+
+// 桌面和主流浏览器的兼容性
+progress.addEventListener('input', seekAudio);
+
+// 移动端兼容性增强
+progress.addEventListener('change', seekAudio);
+progress.addEventListener('touchend', seekAudio);
+progress.addEventListener('mouseup', seekAudio);
 audio.addEventListener('ended', nextSong);
 
 // 更新时间显示
