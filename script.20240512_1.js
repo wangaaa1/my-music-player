@@ -22,10 +22,14 @@ function loadSong(song) {
   cover.src = `${BASE_URL}/images/${song.cover}`;
   highlightPlaylist();
 
-  // 恢复上次播放进度（必须放在 loadSong 内部）
+  // 先清除监听，防止重复
+  audio.onloadedmetadata = null;
+
   const savedTime = localStorage.getItem(STORAGE_KEY_PREFIX + song.name);
   if (savedTime) {
-    audio.currentTime = parseFloat(savedTime);
+    audio.onloadedmetadata = () => {
+      audio.currentTime = parseFloat(savedTime);
+    };
   }
 }
 
