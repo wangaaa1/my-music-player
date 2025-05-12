@@ -117,7 +117,12 @@ function createPlaylist() {
 function highlightPlaylist() {
   const items = playlistEl.querySelectorAll('li');
   items.forEach((item, index) => {
-    item.className = index === songIndex ? 'active' : '';
+    if (index === songIndex) {
+      item.className = 'active';
+      item.scrollIntoView({ behavior: 'smooth', block: 'center' }); // ✅ 新增
+    } else {
+      item.className = '';
+    }
   });
 }
 
