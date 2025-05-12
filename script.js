@@ -8,6 +8,7 @@ const progress = document.getElementById('progress');
 const currentTimeEl = document.getElementById('current-time');
 const durationEl = document.getElementById('duration');
 const playlistEl = document.getElementById('playlist');
+const STORAGE_KEY_PREFIX = 'last_position_';
 
 const BASE_URL = "https://pub-87c4bbfe187546b79e4389795d9b5341.r2.dev";  // 这里改成你的Public URL + my-music
 
@@ -20,7 +21,14 @@ function loadSong(song) {
   audio.src = `${BASE_URL}/songs/${song.name}.mp3`;
   cover.src = `${BASE_URL}/images/${song.cover}`;
   highlightPlaylist();
+
+  // 恢复上次播放进度（必须放在 loadSong 内部）
+  const savedTime = localStorage.getItem(STORAGE_KEY_PREFIX + song.name);
+  if (savedTime) {
+    audio.currentTime = parseFloat(savedTime);
+  }
 }
+
 
 // 播放
 function playSong() {
@@ -65,6 +73,9 @@ audio.addEventListener('timeupdate', () => {
     const progressPercent = (audio.currentTime / audio.duration) * 100;
     progress.value = progressPercent;
     updateTimes();
+    
+    // 保存播放进度
+    localStorage.setItem(STORAGE_KEY_PREFIX + songs[songIndex].name, audio.currentTime);
   }
 });
 progress.addEventListener('input', () => {
