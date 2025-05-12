@@ -66,15 +66,23 @@ function nextSong() {
 // 点击按钮控制
 playBtn.addEventListener('click', () => {
   if (audio.paused) {
+    // ⬇️ 在播放前先尝试恢复进度
+    const savedTime = localStorage.getItem(STORAGE_KEY_PREFIX + songs[songIndex].name);
+    if (savedTime) {
+      audio.currentTime = parseFloat(savedTime);
+      console.log(`[点击播放] 设置 currentTime = ${savedTime}`);
+    }
+
     playSong();
   } else {
     pauseSong();
   }
 
-  // ✅ 在点击播放按钮时也尝试保存位置（防止手机端timeupdate不触发）
-  console.log(`[click] 手动保存位置: ${audio.currentTime.toFixed(2)}s`);
+  // 手动保存当前时间
   localStorage.setItem(STORAGE_KEY_PREFIX + songs[songIndex].name, audio.currentTime);
+  localStorage.setItem('last_song_index', songIndex);
 });
+
 prevBtn.addEventListener('click', prevSong);
 nextBtn.addEventListener('click', nextSong);
 
