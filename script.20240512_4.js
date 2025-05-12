@@ -23,13 +23,16 @@ function loadSong(song) {
   highlightPlaylist();
 
   // 先清除监听，防止重复1
-  audio.onloadedmetadata = null;
-
-  const savedTime = localStorage.getItem(STORAGE_KEY_PREFIX + song.name);
+    const savedTime = localStorage.getItem(STORAGE_KEY_PREFIX + song.name);
   if (savedTime) {
-    audio.onloadedmetadata = () => {
-      audio.currentTime = parseFloat(savedTime);
+    const trySeek = () => {
+      if (audio.readyState >= 1) {
+        audio.currentTime = parseFloat(savedTime);
+        console.log(`[恢复播放进度] 设置 currentTime = ${savedTime}`);
+        audio.removeEventListener('canplay', trySeek);
+      }
     };
+    audio.addEventListener('canplay', trySeek);
   }
 }
 
