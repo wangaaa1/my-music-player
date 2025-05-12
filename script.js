@@ -73,9 +73,12 @@ audio.addEventListener('timeupdate', () => {
     const progressPercent = (audio.currentTime / audio.duration) * 100;
     progress.value = progressPercent;
     updateTimes();
-    
-    // 保存播放进度
+
+    // 保存播放位置
     localStorage.setItem(STORAGE_KEY_PREFIX + songs[songIndex].name, audio.currentTime);
+
+    // 保存当前歌曲索引
+    localStorage.setItem('last_song_index', songIndex);
   }
 });
 progress.addEventListener('input', () => {
@@ -121,15 +124,22 @@ function highlightPlaylist() {
 // 初始加载：从 songs.json 动态读取
 fetch('songs.json?v=' + Date.now())
   .then(response => response.json())
-  .then(data => {
-    songs = data.map(song => ({
-      name: song.name,
-      title: song.name,  // 文件名作为歌曲标题
-      cover: song.cover
-    }));
-    createPlaylist();
-    loadSong(songs[songIndex]);
-  })
+.then(data => {
+  songs = data.map(song => ({
+    name: song.name,
+    title: song.name,
+    cover: song.cover
+  }));
+
+  // 从本地恢复上次听的歌
+  const savedIndex = localStorage.getItem('last_song_index');
+  if (savedIndex !== null && songs[savedIndex]) {
+    songIndex = parseInt(savedIndex);
+  }
+
+  createPlaylist();
+  loadSong(songs[songIndex]);
+})
   .catch(error => {
     console.error('加载歌曲列表失败:', error);
   });
