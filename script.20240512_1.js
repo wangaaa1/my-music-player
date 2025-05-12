@@ -67,6 +67,10 @@ playBtn.addEventListener('click', () => {
   } else {
     pauseSong();
   }
+
+  // ✅ 在点击播放按钮时也尝试保存位置（防止手机端timeupdate不触发）
+  console.log(`[click] 手动保存位置: ${audio.currentTime.toFixed(2)}s`);
+  localStorage.setItem(STORAGE_KEY_PREFIX + songs[songIndex].name, audio.currentTime);
 });
 prevBtn.addEventListener('click', prevSong);
 nextBtn.addEventListener('click', nextSong);
@@ -78,10 +82,9 @@ audio.addEventListener('timeupdate', () => {
     progress.value = progressPercent;
     updateTimes();
 
-    // 保存播放位置
+    // ✅ 添加调试日志和保存播放位置
+    console.log(`[timeupdate] 保存位置: ${audio.currentTime.toFixed(2)}s`);
     localStorage.setItem(STORAGE_KEY_PREFIX + songs[songIndex].name, audio.currentTime);
-
-    // 保存当前歌曲索引
     localStorage.setItem('last_song_index', songIndex);
   }
 });
