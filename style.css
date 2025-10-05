@@ -1,6 +1,6 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f5f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   margin: 0;
   padding: 0;
   display: flex;
@@ -10,161 +10,289 @@ body {
 }
 
 .player {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 25px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   text-align: center;
   width: 100%;
   max-width: 400px;
+  transition: transform 0.3s ease;
+}
+
+.player:hover {
+  transform: translateY(-5px);
 }
 
 .cover-container {
   width: 90vw;
   max-width: 400px;
-  margin: 0 auto 20px auto;
+  margin: 0 auto 25px auto;
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 #cover {
   width: 100%;
   height: auto;
-  border-radius: 10px;
+  border-radius: 15px;
   object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.cover-container:hover #cover {
+  transform: scale(1.05);
 }
 
 h2#title {
-  margin: 10px 0;
-  font-size: 22px;
-  color: #333;
+  margin: 15px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #2d3748;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 #playlist {
   list-style: none;
   padding: 0;
-  margin: 10px 0;
+  margin: 15px 0;
   max-height: 150px;
   overflow-y: auto;
+  border-radius: 10px;
+  background: #f7fafc;
+}
+
+#playlist::-webkit-scrollbar {
+  width: 6px;
+}
+
+#playlist::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+#playlist::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 10px;
+}
+
+#playlist::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
 }
 
 #playlist li {
-  padding: 8px;
+  padding: 12px 15px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  margin: 4px 8px;
+  font-size: 14px;
+  color: #4a5568;
 }
 
 #playlist li:hover {
-  background-color: #e0e0e0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  transform: translateX(5px);
 }
 
 #playlist li.active {
-  background-color: #cce5ff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .controls {
-  margin: 15px 0;
+  margin: 25px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
 }
 
 .controls button {
-  background-color: #007bff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   color: white;
-  padding: 10px 16px;
-  margin: 0 8px;
+  padding: 15px 20px;
   border-radius: 50%;
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .controls button:hover {
-  background-color: #0056b3;
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.controls button:active {
+  transform: scale(0.95);
+}
+
+.controls #play {
+  width: 70px;
+  height: 70px;
+  font-size: 24px;
 }
 
 .progress-container {
   width: 90vw;
   max-width: 400px;
-  margin: 10px auto;
+  margin: 20px auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
 }
 
 #current-time,
 #duration {
-  font-size: 12px;
-  color: #666;
-  min-width: 35px;
+  font-size: 13px;
+  color: #718096;
+  min-width: 40px;
+  font-weight: 500;
 }
 
 #progress {
   flex-grow: 1;
-  margin: 0 10px;
-  height: 5px;
-  border-radius: 5px;
-  background: #d3d3d3;
+  height: 6px;
+  border-radius: 10px;
+  background: #e2e8f0;
   appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#progress:hover {
+  height: 8px;
 }
 
 #progress::-webkit-slider-thumb {
   appearance: none;
-  width: 15px;
-  height: 15px;
-  background: #007bff;
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 50%;
   cursor: pointer;
-  margin-top: -5px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.5);
+  transition: all 0.3s ease;
+}
+
+#progress::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.7);
+}
+
+#progress::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.5);
+}
+
+.speed-control,
+.timer-control {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.speed-control label,
+.timer-control label {
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.speed-control select,
+.timer-control select {
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  border: 2px solid #e2e8f0;
+  background: white;
+  color: #4a5568;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.speed-control select:hover,
+.timer-control select:hover {
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.speed-control select:focus,
+.timer-control select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 /* 手机端适配 */
 @media (max-width: 600px) {
   .player {
     width: 95%;
+    padding: 25px 20px;
   }
+  
   #title {
+    font-size: 20px;
+  }
+  
+  .controls button {
+    width: 55px;
+    height: 55px;
     font-size: 18px;
   }
+  
+  .controls #play {
+    width: 65px;
+    height: 65px;
+    font-size: 22px;
+  }
+  
   .progress-container {
     width: 90vw;
     max-width: 400px;
-    flex-direction: row;
-    gap: 10px;
+  }
+  
+  .speed-control,
+  .timer-control {
+    font-size: 13px;
   }
 }
 
-/* ✅ 倍速播放样式 */
-.speed-control {
-  margin-top: 10px;
-  text-align: center;
-  font-size: 14px;
+/* 添加加载动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.speed-control label {
-  margin-right: 8px;
-  font-weight: bold;
-}
-
-.speed-control select {
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-}
-
-/* ✅ 定时关闭样式 */
-.timer-control {
-  margin-top: 10px;
-  text-align: center;
-  font-size: 14px;
-}
-
-.timer-control label {
-  margin-right: 8px;
-  font-weight: bold;
-}
-
-.timer-control select {
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 14px;
-  border: 1px solid #ccc;
+.player {
+  animation: fadeIn 0.5s ease;
 }
