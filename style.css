@@ -1,9 +1,12 @@
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; /* 移除点击高亮 */
+  -webkit-touch-callout: none; /* 禁用长按菜单 */
+  user-select: none; /* 防止文本选择 */
 }
 
 body {
-  font-family: 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Microsoft YaHei', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
   background: linear-gradient(to bottom, #2c2c2c 0%, #1a1a1a 100%);
   margin: 0;
   padding: 0;
@@ -12,6 +15,8 @@ body {
   align-items: center;
   min-height: 100vh;
   color: #fff;
+  overscroll-behavior: none; /* 防止过度滚动 */
+  -webkit-font-smoothing: antialiased; /* 优化字体渲染 */
 }
 
 .player {
@@ -37,12 +42,14 @@ body {
   align-items: center;
   background: radial-gradient(circle at center, #3a3a3a 0%, #242424 100%);
   padding: 40px;
+  touch-action: manipulation; /* 优化触摸 */
 }
 
 .vinyl-container {
   position: relative;
   width: 400px;
   height: 400px;
+  will-change: transform; /* 优化动画性能 */
 }
 
 /* 唱片臂 */
@@ -58,7 +65,8 @@ body {
   transform: rotate(-30deg);
   z-index: 10;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  transition: transform 0.8s ease;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
 .vinyl-arm::after {
@@ -83,6 +91,7 @@ body {
   position: relative;
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(255, 255, 255, 0.1);
   animation: rotate 20s linear infinite paused;
+  will-change: transform;
 }
 
 /* 唱片纹理 */
@@ -113,6 +122,12 @@ body {
   border-radius: 50%;
   overflow: hidden;
   box-shadow: 0 0 30px rgba(236, 65, 65, 0.5);
+  cursor: pointer; /* 添加点击提示 */
+  transition: transform 0.3s ease;
+}
+
+.cover-container:active {
+  transform: translate(-50%, -50%) scale(0.95);
 }
 
 #cover {
@@ -120,6 +135,7 @@ body {
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+  pointer-events: none;
 }
 
 /* 播放时旋转 */
@@ -154,6 +170,9 @@ body {
   color: #fff;
   background: #252525;
   border-bottom: 1px solid #333;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
 
 #playlist {
@@ -162,6 +181,8 @@ body {
   margin: 0;
   overflow-y: auto;
   flex: 1;
+  -webkit-overflow-scrolling: touch; /* 平滑滚动 */
+  scroll-behavior: smooth;
 }
 
 #playlist::-webkit-scrollbar {
@@ -184,10 +205,31 @@ body {
 #playlist li {
   padding: 15px 20px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
   border-bottom: 1px solid #2a2a2a;
   font-size: 14px;
   color: #999;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 添加触摸反馈动画 */
+#playlist li::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(236, 65, 65, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+#playlist li:active::before {
+  width: 300%;
+  height: 300%;
 }
 
 #playlist li:hover {
@@ -250,13 +292,15 @@ body {
   border-radius: 50% !important;
   font-size: 16px !important;
   cursor: pointer;
-  transition: all 0.3s ease !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
   position: relative;
   overflow: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(236, 65, 65, 0.2);
 }
 
 .controls button::before {
@@ -282,7 +326,8 @@ body {
 }
 
 .controls button:active {
-  transform: scale(0.95) !important;
+  transform: scale(0.92) !important;
+  transition-duration: 0.1s !important;
 }
 
 .controls #play {
@@ -306,7 +351,7 @@ body {
 }
 
 .controls #play:active {
-  transform: scale(0.98) !important;
+  transform: scale(0.95) !important;
 }
 
 .progress-container {
@@ -322,27 +367,29 @@ body {
   color: #666;
   min-width: 40px;
   text-align: center;
+  user-select: none;
 }
 
 #progress {
   flex: 1;
-  height: 4px;
-  border-radius: 2px;
+  height: 6px;
+  border-radius: 3px;
   background: #444;
   appearance: none;
   cursor: pointer;
   position: relative;
+  outline: none;
 }
 
 #progress::-webkit-slider-thumb {
   appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   background: #ec4141;
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(236, 65, 65, 0.5);
-  transition: all 0.3s;
+  transition: all 0.2s;
 }
 
 #progress::-webkit-slider-thumb:hover {
@@ -350,9 +397,13 @@ body {
   box-shadow: 0 0 10px rgba(236, 65, 65, 0.8);
 }
 
+#progress::-webkit-slider-thumb:active {
+  transform: scale(1.3);
+}
+
 #progress::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   background: #ec4141;
   border-radius: 50%;
   border: none;
@@ -382,15 +433,21 @@ body {
 
 .speed-control select,
 .timer-control select {
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 18px;
+  font-size: 13px;
   border: 1px solid #444;
   background: #2a2a2a;
   color: #999;
   cursor: pointer;
   outline: none;
-  transition: all 0.3s;
+  transition: all 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M1 1L5 5L9 1' stroke='%23999' stroke-width='1.5' stroke-linecap='round'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
 }
 
 .speed-control select:hover,
@@ -399,13 +456,20 @@ body {
   color: #ec4141;
 }
 
-/* 响应式设计 */
-@media (max-width: 900px) {
+.speed-control select:focus,
+.timer-control select:focus {
+  border-color: #ec4141;
+  box-shadow: 0 0 0 2px rgba(236, 65, 65, 0.2);
+}
+
+/* 移动端优化 - 平板 */
+@media (max-width: 900px) and (min-width: 601px) {
   .player {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
-    height: auto;
-    min-height: 100vh;
+    grid-template-rows: minmax(350px, auto) minmax(200px, 1fr) auto;
+    height: 100vh;
+    border-radius: 0;
+    width: 100%;
   }
 
   .left-section {
@@ -415,18 +479,25 @@ body {
   }
 
   .vinyl-container {
-    width: 300px;
-    height: 300px;
+    width: 320px;
+    height: 320px;
   }
 
   .vinyl-disc {
-    width: 300px;
-    height: 300px;
+    width: 320px;
+    height: 320px;
   }
 
   .cover-container {
-    width: 180px;
+    width: 200px;
+    height: 200px;
+  }
+
+  .vinyl-arm {
+    width: 110px;
     height: 180px;
+    top: -70px;
+    right: 30px;
   }
 
   .right-section {
@@ -434,63 +505,283 @@ body {
     grid-row: 2;
     border-left: none;
     border-top: 1px solid #333;
-    max-height: 300px;
+    max-height: none;
   }
 
   .bottom-bar {
     grid-column: 1;
     grid-row: 3;
-    flex-direction: column;
-    gap: 15px;
-    padding: 15px;
+    padding: 20px;
   }
 
   .song-info h2#title {
     max-width: 100%;
     text-align: center;
+    font-size: 16px;
+  }
+}
+
+/* 移动端优化 - 手机 */
+@media (max-width: 600px) {
+  body {
+    padding: 0;
+    margin: 0;
+  }
+
+  .player {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+    width: 100%;
+    border-radius: 0;
+    max-width: none;
+  }
+
+  .left-section {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 20px;
+    min-height: 320px;
+  }
+
+  .vinyl-container {
+    width: min(280px, 80vw);
+    height: min(280px, 80vw);
+  }
+
+  .vinyl-disc {
+    width: 100%;
+    height: 100%;
+  }
+
+  .cover-container {
+    width: 65%;
+    height: 65%;
+  }
+
+  .vinyl-arm {
+    width: 90px;
+    height: 140px;
+    top: -50px;
+    right: 15px;
+  }
+
+  .right-section {
+    grid-column: 1;
+    grid-row: 2;
+    border-left: none;
+    border-top: 1px solid #333;
+    min-height: 200px;
+    max-height: calc(100vh - 500px);
+  }
+
+  .playlist-header {
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  #playlist li {
+    padding: 18px 20px;
+    font-size: 15px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+  }
+
+  .bottom-bar {
+    grid-column: 1;
+    grid-row: 3;
+    padding: 15px;
+    gap: 15px;
+    flex-direction: column;
+    background: linear-gradient(to top, #1c1c1c 0%, rgba(28, 28, 28, 0.98) 100%);
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .song-info h2#title {
+    max-width: 100%;
+    text-align: center;
+    font-size: 16px;
+    padding: 0 10px;
+  }
+
+  .player-controls {
+    width: 100%;
+    gap: 15px;
+  }
+
+  .controls {
+    gap: 20px;
+  }
+
+  .controls button {
+    width: 52px !important;
+    height: 52px !important;
+    font-size: 18px !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4) !important;
+  }
+
+  .controls #play {
+    width: 68px !important;
+    height: 68px !important;
+    font-size: 26px !important;
+    box-shadow: 0 5px 20px rgba(236, 65, 65, 0.5) !important;
+  }
+
+  .progress-container {
+    gap: 12px;
+  }
+
+  #progress {
+    height: 8px;
+    border-radius: 4px;
+  }
+
+  #progress::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
+
+  #progress::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+  }
+
+  #current-time,
+  #duration {
+    font-size: 13px;
+    min-width: 45px;
+    font-weight: 500;
   }
 
   .extra-controls {
     flex-direction: row;
     width: 100%;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 0 10px;
+  }
+
+  .speed-control,
+  .timer-control {
+    flex: 1;
     justify-content: center;
+  }
+
+  .speed-control select,
+  .timer-control select {
+    padding: 8px 12px;
+    padding-right: 30px;
+    font-size: 14px;
+    border-radius: 20px;
+    min-width: 90px;
+  }
+
+  .speed-control label,
+  .timer-control label {
+    font-size: 13px;
   }
 }
 
-@media (max-width: 600px) {
+/* 横屏优化 */
+@media (max-width: 900px) and (orientation: landscape) {
+  .player {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr auto;
+    height: 100vh;
+  }
+
+  .left-section {
+    grid-column: 1;
+    grid-row: 1;
+    padding: 20px;
+    width: 45vw;
+  }
+
   .vinyl-container {
-    width: 250px;
-    height: 250px;
+    width: min(250px, 35vw);
+    height: min(250px, 35vw);
   }
 
-  .vinyl-disc {
-    width: 250px;
-    height: 250px;
+  .right-section {
+    grid-column: 2;
+    grid-row: 1;
+    border-left: 1px solid #333;
+    border-top: none;
+    max-height: none;
   }
 
-  .cover-container {
-    width: 150px;
-    height: 150px;
+  .bottom-bar {
+    grid-column: 1 / 3;
+    grid-row: 2;
+    flex-direction: row;
+    padding: 10px 20px;
   }
 
-  .vinyl-arm {
-    width: 100px;
-    height: 160px;
-    top: -60px;
-    right: 20px;
+  .extra-controls {
+    flex-direction: row;
+    gap: 15px;
   }
 
-  .controls button {
-    width: 44px !important;
-    height: 44px !important;
-    font-size: 14px !important;
-    background: #2a2a2a !important;
+  .player-controls {
+    max-width: 500px;
   }
+}
 
-  .controls #play {
-    width: 56px !important;
-    height: 56px !important;
-    font-size: 20px !important;
-    background: linear-gradient(135deg, #ec4141 0%, #d83030 100%) !important;
+/* 增强动画性能 */
+* {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* 滑动手势提示 */
+@media (max-width: 600px) {
+  .right-section::after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    background: #666;
+    border-radius: 2px;
+    opacity: 0.5;
   }
+}
+
+/* 深色模式优化 */
+@media (prefers-color-scheme: dark) {
+  .player {
+    background: #1a1a1a;
+  }
+  
+  .right-section {
+    background: #111;
+  }
+  
+  .bottom-bar {
+    background: #111;
+  }
+}
+
+/* 防止iOS橡皮筋效果 */
+html, body {
+  position: fixed;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
 }
