@@ -1,118 +1,201 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的音乐播放器</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<script>
-// 禁止开发者工具
-document.addEventListener('keydown', function (e) {
-    if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 67 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
-        e.preventDefault();
-        return false;
+
+const audio = document.getElementById('audio');
+const cover = document.getElementById('cover');
+const title = document.getElementById('title');
+const playBtn = document.getElementById('play');
+const prevBtn = document.getElementById('prev');
+const nextBtn = document.getElementById('next');
+const progress = document.getElementById('progress');
+const currentTimeEl = document.getElementById('current-time');
+const durationEl = document.getElementById('duration');
+const playlistEl = document.getElementById('playlist');
+const STORAGE_KEY_PREFIX = 'last_position_';
+
+const BASE_URL = "https://pub-87c4bbfe187546b79e4389795d9b5341.r2.dev";
+
+let songs = [];
+let songIndex = 0;
+let resumeTime = null;
+
+// 加载歌曲
+function loadSong(song) {
+  title.innerText = song.title;
+  audio.src = `${BASE_URL}/songs/${song.name}.mp3`;
+  cover.src = `${BASE_URL}/images/${song.cover}`;
+  highlightPlaylist();
+
+  const savedTime = localStorage.getItem(STORAGE_KEY_PREFIX + song.name);
+  resumeTime = savedTime ? parseFloat(savedTime) : null;
+
+  updateTimes();
+}
+
+// 播放
+function playSong() {
+  audio.play();
+  playBtn.innerText = '⏸️';
+}
+
+// 暂停
+function pauseSong() {
+  audio.pause();
+  playBtn.innerText = '▶️';
+}
+
+// 上一首
+function prevSong() {
+  songIndex = (songIndex - 1 + songs.length) % songs.length;
+  loadSong(songs[songIndex]);
+  playSong();
+}
+
+// 下一首
+function nextSong() {
+  songIndex = (songIndex + 1) % songs.length;
+  loadSong(songs[songIndex]);
+  playSong();
+}
+
+// 点击按钮控制
+playBtn.addEventListener('click', () => {
+  if (audio.paused) {
+    if (resumeTime !== null && audio.readyState >= 1) {
+      audio.currentTime = resumeTime;
+      console.log(`[点击播放] 设置 currentTime = ${resumeTime}`);
+      resumeTime = null;
     }
+    playSong();
+  } else {
+    pauseSong();
+  }
+
+  localStorage.setItem(STORAGE_KEY_PREFIX + songs[songIndex].name, audio.currentTime);
+  localStorage.setItem('last_song_index', songIndex);
 });
-document.addEventListener('contextmenu', function (e) {
-    e.preventDefault();
+
+prevBtn.addEventListener('click', prevSong);
+nextBtn.addEventListener('click', nextSong);
+
+// 更新进度条
+audio.addEventListener('timeupdate', () => {
+  if (audio.duration) {
+    const progressPercent = (audio.currentTime / audio.duration) * 100;
+    progress.value = progressPercent;
+    updateTimes();
+
+    localStorage.setItem(STORAGE_KEY_PREFIX + songs[songIndex].name, audio.currentTime);
+    localStorage.setItem('last_song_index', songIndex);
+  }
 });
-</script>
 
-<body>
-  <div class="player">
-    
-    <!-- 左侧：封面和唱片区域 -->
-    <div class="left-section">
-      <div class="vinyl-container">
-        <div class="vinyl-arm"></div>
-        <div class="vinyl-disc">
-          <div class="cover-container">
-            <img id="cover" src="images/cover1.jpg" alt="歌曲封面">
-          </div>
-        </div>
-      </div>
-    </div>
+function seekAudio() {
+  if (audio.duration) {
+    audio.currentTime = (progress.value / 100) * audio.duration;
+  }
+}
 
-    <!-- 右侧：播放列表 -->
-    <div class="right-section">
-      <div class="playlist-header">播放列表</div>
-      <ul id="playlist"></ul>
-    </div>
+progress.addEventListener('input', seekAudio);
+progress.addEventListener('change', seekAudio);
+progress.addEventListener('touchend', seekAudio);
+progress.addEventListener('mouseup', seekAudio);
+audio.addEventListener('ended', nextSong);
 
-    <!-- 底部：播放控制栏 -->
-    <div class="bottom-bar">
-      <div class="song-info">
-        <h2 id="title">歌曲1</h2>
-      </div>
+// 更新时间显示
+function updateTimes() {
+  currentTimeEl.innerText = formatTime(audio.currentTime);
+  durationEl.innerText = formatTime(audio.duration);
+}
 
-      <div class="player-controls">
-        <div class="controls">
-          <button id="prev">⏮</button>
-          <button id="play" class="play-btn">▶</button>
-          <button id="next">⏭</button>
-        </div>
+function formatTime(time) {
+  const minutes = Math.floor(time / 60) || 0;
+  const seconds = Math.floor(time % 60) || 0;
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
 
-        <div class="progress-container">
-          <span id="current-time">00:00</span>
-          <input type="range" id="progress" value="0" min="0" max="100">
-          <span id="duration">00:00</span>
-        </div>
-      </div>
-
-      <div class="extra-controls">
-        <div class="speed-control">
-          <label for="speed">倍速:</label>
-          <select id="speed">
-            <option value="1">1x</option>
-            <option value="1.25">1.25x</option>
-            <option value="1.5">1.5x</option>
-            <option value="1.75">1.75x</option>
-            <option value="2">2x</option>
-          </select>
-        </div>
-        
-        <div class="timer-control">
-          <label for="timer">定时:</label>
-          <select id="timer">
-            <option value="0">不定时</option>
-            <option value="0.5">0.5小时</option>
-            <option value="1">1小时</option>
-            <option value="1.5">1.5小时</option>
-            <option value="2">2小时</option>
-            <option value="2.5">2.5小时</option>
-            <option value="3">3小时</option>
-            <option value="3.5">3.5小时</option>
-            <option value="4">4小时</option>
-            <option value="4.5">4.5小时</option>
-            <option value="5">5小时</option>
-            <option value="5.5">5.5小时</option>
-            <option value="6">6小时</option>
-            <option value="6.5">6.5小时</option>
-            <option value="7">7小时</option>
-            <option value="7.5">7.5小时</option>
-            <option value="8">8小时</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <audio id="audio"></audio>
-  </div>
-
-  <script src="script.20240512_4_fixed.js"></script>
-  <script>
-    // 控制唱片旋转动画
-    const playerEl = document.querySelector('.player');
-    audio.addEventListener('play', () => {
-      playerEl.classList.add('playing');
+// 生成歌单列表
+function createPlaylist() {
+  playlistEl.innerHTML = '';
+  songs.forEach((song, index) => {
+    const li = document.createElement('li');
+    li.textContent = song.title;
+    li.dataset.index = index;
+    li.addEventListener('click', () => {
+      songIndex = index;
+      loadSong(songs[songIndex]);
+      playSong();
     });
-    audio.addEventListener('pause', () => {
-      playerEl.classList.remove('playing');
-    });
-    audio.addEventListener('ended', () => {
-      playerEl.classList.remove('playing');
-    });
-  </script>
-</body>
-</html>
+    playlistEl.appendChild(li);
+  });
+}
+
+// 高亮当前播放的歌曲
+function highlightPlaylist() {
+  const items = playlistEl.querySelectorAll('li');
+  items.forEach((item, index) => {
+    if (index === songIndex) {
+      item.className = 'active';
+      item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      item.className = '';
+    }
+  });
+}
+
+// 初始化
+fetch('songs.json?v=' + Date.now())
+  .then(response => response.json())
+  .then(data => {
+    songs = data.map(song => ({
+      name: song.name,
+      title: song.name,
+      cover: song.cover
+    }));
+
+    const savedIndex = localStorage.getItem('last_song_index');
+    if (savedIndex !== null && songs[savedIndex]) {
+      songIndex = parseInt(savedIndex);
+    }
+
+    createPlaylist();
+    loadSong(songs[songIndex]);
+  })
+  .catch(error => {
+    console.error('加载歌曲列表失败:', error);
+  });
+
+// 倍速播放功能
+const speedSelect = document.getElementById('speed');
+speedSelect.addEventListener('change', () => {
+  audio.playbackRate = parseFloat(speedSelect.value);
+});
+
+// 定时关闭功能
+let pauseTimer = null;
+const timerSelect = document.getElementById('timer');
+timerSelect.addEventListener('change', () => {
+  clearTimeout(pauseTimer);
+  const hours = parseFloat(timerSelect.value);
+  if (hours > 0) {
+    const ms = hours * 60 * 60 * 1000;
+    pauseTimer = setTimeout(() => {
+      audio.pause();
+      alert('播放已自动暂停 ⏸️');
+    }, ms);
+  }
+});
+
+// 每秒保存一次播放位置
+let saveInterval = null;
+function startSaveTimer() {
+  clearInterval(saveInterval);
+  saveInterval = setInterval(() => {
+    if (!audio.paused && audio.currentTime > 0) {
+      localStorage.setItem(STORAGE_KEY_PREFIX + songs[songIndex].name, audio.currentTime);
+      localStorage.setItem('last_song_index', songIndex);
+    }
+  }, 1000);
+}
+audio.addEventListener('play', startSaveTimer);
+audio.addEventListener('pause', () => clearInterval(saveInterval));
+audio.addEventListener('ended', () => clearInterval(saveInterval));
+window.addEventListener('beforeunload', () => clearInterval(saveInterval));
