@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>我的音乐播放器</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -22,8 +22,14 @@ document.addEventListener('contextmenu', function (e) {
 <body>
   <div class="player">
     
+    <!-- 播放列表遮罩层 -->
+    <div class="playlist-overlay" id="playlistOverlay"></div>
+    
     <!-- 左侧：封面和唱片区域 -->
     <div class="left-section">
+      <!-- 播放列表切换按钮（移动端） -->
+      <button class="playlist-toggle" id="playlistToggle"></button>
+      
       <div class="vinyl-container">
         <div class="vinyl-arm"></div>
         <div class="vinyl-disc">
@@ -35,8 +41,11 @@ document.addEventListener('contextmenu', function (e) {
     </div>
 
     <!-- 右侧：播放列表 -->
-    <div class="right-section">
-      <div class="playlist-header">播放列表</div>
+    <div class="right-section" id="playlistPanel">
+      <div class="playlist-header">
+        <span>播放列表</span>
+        <button class="playlist-close" id="playlistClose">×</button>
+      </div>
       <ul id="playlist"></ul>
     </div>
 
@@ -47,16 +56,16 @@ document.addEventListener('contextmenu', function (e) {
       </div>
 
       <div class="player-controls">
-        <div class="controls">
-          <button id="prev">⏮</button>
-          <button id="play" class="play-btn">▶</button>
-          <button id="next">⏭</button>
-        </div>
-
         <div class="progress-container">
           <span id="current-time">00:00</span>
           <input type="range" id="progress" value="0" min="0" max="100">
           <span id="duration">00:00</span>
+        </div>
+
+        <div class="controls">
+          <button id="prev">⏮</button>
+          <button id="play" class="play-btn">▶</button>
+          <button id="next">⏭</button>
         </div>
       </div>
 
@@ -76,22 +85,14 @@ document.addEventListener('contextmenu', function (e) {
           <label for="timer">定时:</label>
           <select id="timer">
             <option value="0">不定时</option>
-            <option value="0.5">0.5小时</option>
+            <option value="0.5">30分钟</option>
             <option value="1">1小时</option>
             <option value="1.5">1.5小时</option>
             <option value="2">2小时</option>
-            <option value="2.5">2.5小时</option>
             <option value="3">3小时</option>
-            <option value="3.5">3.5小时</option>
             <option value="4">4小时</option>
-            <option value="4.5">4.5小时</option>
             <option value="5">5小时</option>
-            <option value="5.5">5.5小时</option>
             <option value="6">6小时</option>
-            <option value="6.5">6.5小时</option>
-            <option value="7">7小时</option>
-            <option value="7.5">7.5小时</option>
-            <option value="8">8小时</option>
           </select>
         </div>
       </div>
@@ -100,6 +101,80 @@ document.addEventListener('contextmenu', function (e) {
     <audio id="audio"></audio>
   </div>
 
+  <!-- 在原有的script.js之前添加播放列表切换功能 -->
+  <script>
+    // 播放列表切换功能
+    document.addEventListener('DOMContentLoaded', function() {
+      const playlistToggle = document.getElementById('playlistToggle');
+      const playlistPanel = document.getElementById('playlistPanel');
+      const playlistClose = document.getElementById('playlistClose');
+      const playlistOverlay = document.getElementById('playlistOverlay');
+      const player = document.querySelector('.player');
+      
+      // 检查是否是移动端
+      const isMobile = window.innerWidth <= 767;
+      
+      // 切换播放列表
+      if (playlistToggle) {
+        playlistToggle.addEventListener('click', function() {
+          playlistPanel.classList.add('show');
+          if (playlistOverlay && isMobile) {
+            playlistOverlay.classList.add('show');
+          }
+          document.body.style.overflow = 'hidden'; // 防止背景滚动
+        });
+      }
+      
+      // 关闭播放列表函数
+      function closePlaylist() {
+        playlistPanel.classList.remove('show');
+        if (playlistOverlay) {
+          playlistOverlay.classList.remove('show');
+        }
+        document.body.style.overflow = '';
+      }
+      
+      // 关闭按钮
+      if (playlistClose) {
+        playlistClose.addEventListener('click', closePlaylist);
+      }
+      
+      // 点击遮罩层关闭
+      if (playlistOverlay) {
+        playlistOverlay.addEventListener('click', closePlaylist);
+      }
+      
+      // 选择歌曲后自动关闭播放列表（移动端）
+      const playlist = document.getElementById('playlist');
+      if (playlist && isMobile) {
+        playlist.addEventListener('click', function(e) {
+          if (e.target.tagName === 'LI') {
+            setTimeout(() => {
+              closePlaylist();
+            }, 300);
+          }
+        });
+      }
+      
+      // 窗口大小改变时重新检查
+      window.addEventListener('resize', function() {
+        const isNowMobile = window.innerWidth <= 767;
+        if (!isNowMobile) {
+          closePlaylist();
+        }
+      });
+      
+      // 为封面添加点击播放/暂停功能
+      const coverContainer = document.querySelector('.cover-container');
+      const playBtn = document.getElementById('play');
+      if (coverContainer && playBtn) {
+        coverContainer.addEventListener('click', function() {
+          playBtn.click();
+        });
+      }
+    });
+  </script>
+  
   <script src="script.20240512_4_fixed.js"></script>
 </body>
 </html>
