@@ -236,42 +236,74 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 }
 
 .controls button {
-  background: transparent;
-  border: 2px solid #666;
+  background: #2a2a2a;
+  border: none;
   color: #999;
-  width: 45px;
-  height: 45px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.controls button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(236, 65, 65, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.controls button:hover::before {
+  opacity: 1;
 }
 
 .controls button:hover {
-  border-color: #ec4141;
   color: #ec4141;
-  transform: scale(1.1);
+  transform: scale(1.08);
+  box-shadow: 0 4px 15px rgba(236, 65, 65, 0.4);
+}
+
+.controls button:active {
+  transform: scale(0.95);
 }
 
 .controls #play {
-  background: #ec4141;
-  border-color: #ec4141;
+  background: linear-gradient(135deg, #ec4141 0%, #d83030 100%);
   color: #fff;
-  width: 55px;
-  height: 55px;
-  font-size: 22px;
+  width: 64px;
+  height: 64px;
+  font-size: 24px;
+  box-shadow: 0 4px 20px rgba(236, 65, 65, 0.5);
+}
+
+.controls #play::before {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
 }
 
 .controls #play:hover {
-  background: #d83838;
-  border-color: #d83838;
+  background: linear-gradient(135deg, #ff4d4d 0%, #ec4141 100%);
+  transform: scale(1.1);
+  box-shadow: 0 6px 25px rgba(236, 65, 65, 0.6);
+}
+
+.controls #play:active {
+  transform: scale(0.98);
 }
 
 .progress-container {
