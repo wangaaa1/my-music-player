@@ -11,7 +11,7 @@ const durationEl = document.getElementById('duration');
 const playlistEl = document.getElementById('playlist');
 const STORAGE_KEY_PREFIX = 'last_position_';
 
-const BASE_URL = "https://pub-87c4bbfe187546b79e4389795d9b5341.r2.dev";
+const BASE_URL = "https://audio.guzhenren.cc";
 
 let songs = [];
 let songIndex = 0;
